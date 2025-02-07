@@ -1,0 +1,44 @@
+### member - login
+# @name login
+POST http://localhost:8080/member/login
+content-type: application/json
+
+{
+    "email" : "admin@gmail.com",
+    "password" : "1"
+}
+
+### member - find all
+GET http://localhost:8080/member
+content-type: application/json
+
+### member - find all
+GET http://localhost:8080/member?page=0&size=1&sort=id,asc
+content-type: application/json
+
+@get_uuid = {{$guid}}
+### member - insert
+POST http://localhost:8080/member
+content-type: application/json
+
+{
+    "email" : "{{get_uuid}}@test.com",
+    "name" : "{{get_uuid}}",
+    "password" : "1",
+    "phone_number": "01022223333"
+}
+
+### member - update
+PUT http://localhost:8080/member
+content-type: application/json
+
+{
+    "id" : 1,
+    "email" : "dev@dev.com",
+    "name" : "dev",
+    "password" : "1234",
+    "phone_number" : "01011112224"
+}
+
+### member - delete
+DELETE http://localhost:8080/member/2

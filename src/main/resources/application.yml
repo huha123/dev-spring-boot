@@ -1,0 +1,58 @@
+server:
+  port: 8080
+
+spring:
+  profiles:
+    active:
+      - h2
+  output.ansi.enabled: always
+
+jwt:
+  secret: and0LWtleS1odWhhMTIzLXRlc3QtYWFhYWJiYmJjY2NjZGRkZGVlZWVmZmZmLWFhYWFiYmJiY2NjY2RkZGRlZWVlZmZmZg==
+
+---
+spring.config.activate.on-profile: h2
+spring:
+  h2:
+    console:
+      enabled: true
+      path: /h2
+  datasource:
+    hikari:
+      jdbc-url: jdbc:h2:mem:testdb;mode=mysql;DATABASE_TO_LOWER=TRUE;DB_CLOSE_ON_EXIT=FALSE
+      # jdbc-url: jdbc:h2:C:\dev\testdb;mode=mysql;DATABASE_TO_LOWER=FALSE;DB_CLOSE_ON_EXIT=FALSE
+      username: sa
+      password:
+      driver-class-name: org.h2.Driver
+  jpa:
+    open-in-view: false
+    show-sql: false
+    defer-datasource-initialization: true
+    generate-ddl: false
+    hibernate:
+      ddl-auto: none
+  sql:
+    init:
+      username: sa
+      password:
+      schema-locations:
+        - classpath*:db/schema.sql
+      data-locations:
+        - classpath*:db/data.sql
+
+
+---
+## common settings...
+# logging.pattern.console: "%clr(%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd'T'HH:mm:ss.SSSXXX}}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr([%X]){cyan} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"
+spring:
+  jpa:
+    properties:
+      hibernate:
+        "[format_sql]": true
+        "[highlight_sql]": true
+        "[use_sql_comments]": true
+logging:
+  level:
+    "[org.hibernate]":
+      SQL: debug
+      "[orm.jdbc.bind]": trace

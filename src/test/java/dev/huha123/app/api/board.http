@@ -1,0 +1,49 @@
+### auth - login
+# @name login
+POST http://localhost:8080/member/login
+content-type: application/json
+
+{
+    "email" : "admin@gmail.com",
+    "password" : "1"
+}
+
+@auth-token = {{login.response.headers.Authorization}}
+
+### board - find all
+GET http://localhost:8080/board
+content-type: application/json
+Authorization: {{auth-token}}
+
+### board - find all
+GET http://localhost:8080/board?size=10&sort=id,asc
+content-type: application/json
+Authorization: {{auth-token}}
+
+### board - insert
+POST http://localhost:8080/board
+content-type: application/json
+Authorization: {{auth-token}}
+
+{
+    "title" : "제목입니다.",
+    "content" : "내용입니다.",
+    "password" : "{{$guid}}"
+}
+
+### board - update
+PUT http://localhost:8080/board
+content-type: application/json
+Authorization: {{auth-token}}
+
+{
+    "id" : 2,
+    "title" : "제목입니다 111111.",
+    "content" : "내용입니다 1111111.",
+    "password" : "1234"
+}
+
+### board - delete
+DELETE http://localhost:8080/board/2
+content-type: application/json
+Authorization: {{auth-token}}

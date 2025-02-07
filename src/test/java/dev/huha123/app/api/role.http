@@ -1,0 +1,37 @@
+### auth - login
+# @name login
+POST http://localhost:8080/member/login
+content-type: application/json
+
+{
+    "email" : "user2@gmail.com",
+    "password" : "1"
+}
+
+@auth-token = {{login.response.headers.Authorization}}
+
+### role - find all
+GET http://localhost:8080/role
+content-type: application/json
+Authorization: {{auth-token}}
+
+### role - find all
+GET http://localhost:8080/role?size=10&sort=id,desc
+content-type: application/json
+Authorization: {{auth-token}}
+
+### role - find all
+GET http://localhost:8080/role/1
+content-type: application/json
+Authorization: {{auth-token}}
+
+
+### auth - find all
+GET http://localhost:8080/auth
+content-type: application/json
+Authorization: {{auth-token}}
+
+### auth - find all
+GET http://localhost:8080/auth/1
+content-type: application/json
+Authorization: {{auth-token}}
