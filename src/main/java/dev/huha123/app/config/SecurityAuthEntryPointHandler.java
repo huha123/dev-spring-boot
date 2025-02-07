@@ -20,7 +20,7 @@ public class SecurityAuthEntryPointHandler implements AuthenticationEntryPoint {
             AuthenticationException authException) throws IOException, ServletException {
         log.info("##### SecurityAuthEntryPointHandler authException.getMessage():{}", authException.getMessage());
         log.info("##### SecurityAuthEntryPointHandler request.getRequestURL():{}", request.getRequestURL());
-        /* http code 403 handler */
+        /* http code 401 handler */
     }
 
 }

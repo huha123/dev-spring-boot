@@ -35,7 +35,8 @@ import lombok.extern.slf4j.Slf4j;
 @EnableMethodSecurity(securedEnabled = true, prePostEnabled = true)
 @RequiredArgsConstructor
 public class SecurityConfig {
-
+    private final SecurityAuthEntryPointHandler authEntryPointHandler;
+    private final SecurityAccessDeniedHandler accessDeniedHandler;
     private final JwtAuthFilter jwtAuthFilter;
     private final String[] matchers = { "/member/**", "/role/**", "/auth/**" };
 
@@ -58,7 +59,10 @@ public class SecurityConfig {
                                 .anyRequest().authenticated())
 
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-                .exceptionHandling(err -> err.authenticationEntryPoint(null).accessDeniedHandler(null));
+
+                /* 401, 403 error custom exception handler */
+                // .exceptionHandling(err -> err.authenticationEntryPoint(authEntryPointHandler).accessDeniedHandler(accessDeniedHandler))
+                ;
         return httpSecurity.build();
     }
 

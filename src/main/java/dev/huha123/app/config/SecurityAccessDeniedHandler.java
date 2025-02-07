@@ -18,7 +18,7 @@ public class SecurityAccessDeniedHandler implements AccessDeniedHandler {
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response,
             AccessDeniedException accessDeniedException) throws IOException, ServletException {
-        log.info("##### SecurityAccessDeniedHandler authException.getMessage():{}", accessDeniedException.getMessage());
+        log.info("##### SecurityAccessDeniedHandler accessDeniedException.getMessage():{}", accessDeniedException.getMessage());
         log.info("##### SecurityAccessDeniedHandler request.getRequestURL():{}", request.getRequestURL());
         /* http code 403 handler  */
     }
