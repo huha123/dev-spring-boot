@@ -5,6 +5,8 @@ import dev.huha123.app.dto.UserDto;
 import dev.huha123.app.entity.UserEntity;
 import dev.huha123.app.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +23,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
+    private final AuthenticationManager authenticationManager;
 
     /**
      * 새로운 사용자를 생성합니다.
@@ -111,12 +114,11 @@ public class UserService {
      * 로그인 처리를 하고 JWT 토큰을 반환합니다.
      */
     public String login(String username, String password) {
-        UserEntity user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+        // AuthenticationManager를 통해 인증 시도 (비밀번호 체크, 계정 활성화 여부 등 자동 처리)
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
 
-        if (!passwordEncoder.matches(password, user.getPassword())) {
-            throw new RuntimeException("비밀번호가 일치하지 않습니다.");
-        }
+        // 인증 성공 시 사용자 정보 조회 (여기서는 DB를 다시 조회하여 최신 Role 정보를 가져옴)
+        UserEntity user = userRepository.findByUsername(username).get();
         return jwtUtil.createToken(user.getUsername(), user.getRole());
     }
 }

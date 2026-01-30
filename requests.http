@@ -5,13 +5,36 @@
 
 
 ### /api/login - 로그인
+# @name login
 POST {{host}}/api/login
 Content-Type: {{contentType}}
 
 {
-  "username": "admin",
+  "username": "manager",
   "password": "1234"
 }
+
+@token = {{login.response.body.token}}
+
+### -------------------------------------------------------
+### 아래 요청들의 {{token}} 부분에 위 로그인 결과로 받은 토큰 값을 붙여넣으세요.
+### 예: Authorization: Bearer eyJhbGciOiJIUzI1NiJ9...
+### -------------------------------------------------------
+
+### 4. User 권한 테스트
+# User, Manager, Admin 모두 접근 가능
+GET http://localhost:8080/api/test/user
+Authorization: Bearer {{token}}
+
+### 5. Manager 권한 테스트
+# Manager, Admin 접근 가능 (User 토큰으로 요청 시 403 Forbidden)
+GET http://localhost:8080/api/test/manager
+Authorization: Bearer {{token}}
+
+### 6. Admin 권한 테스트
+# Admin만 접근 가능 (User, Manager 토큰으로 요청 시 403 Forbidden)
+GET http://localhost:8080/api/test/admin
+Authorization: Bearer {{token}}
 
 ### 사용자 생성
 POST {{host}}/api/users
