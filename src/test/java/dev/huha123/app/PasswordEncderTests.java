@@ -16,8 +16,8 @@ public class PasswordEncderTests {
 
     @Test
     public void test1() {
-        String password = "1";
-        String password1 = "1";
+        String password = "1234";
+        String password1 = "1234";
         String encode = passwordEncoder.encode(password);
         log.info("## ENCODE :{}", encode);
         log.info("### passwordEncoder.matches(password, encode): {}", passwordEncoder.matches(password1, encode));

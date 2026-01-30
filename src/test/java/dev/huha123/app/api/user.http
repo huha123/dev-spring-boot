@@ -1,0 +1,36 @@
+### 변수 설정
+@host = http://localhost:8080
+@contentType = application/json
+
+### 사용자 생성
+POST {{host}}/api/users
+Content-Type: {{contentType}}
+
+{
+  "username": "testuser",
+  "email": "test@example.com",
+  "password": "password123",
+  "role": "user"
+}
+
+### 모든 사용자 조회
+GET {{host}}/api/users
+
+### ID로 사용자 조회
+GET {{host}}/api/users/1
+
+### 사용자 이름으로 사용자 조회
+GET {{host}}/api/users/username/testuser
+
+### 사용자 정보 수정
+PUT {{host}}/api/users/1
+Content-Type: {{contentType}}
+
+{
+  "username": "updateduser",
+  "email": "updated@example.com",
+  "password": "newpassword123"
+}
+
+### 사용자 삭제
+DELETE {{host}}/api/users/1

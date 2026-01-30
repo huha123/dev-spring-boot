@@ -1,0 +1,31 @@
+spring:
+  config:
+    activate:
+      on-profile: local
+
+  output.ansi.enabled: always
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  sql:
+    init:
+      data-locations: classpath:/db/data.sql # 예: resources/custom-data.sql 로 변경
+  jpa:
+    defer-datasource-initialization: true
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
+
+jwt:
+  secret: v3ryS3cr3tK3yMustB3L0ngEn0ughF0rHMACSHA256! # 32자 이상 권장
+  expiration: 86400000 # 1일 (밀리초 단위)

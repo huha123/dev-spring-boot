@@ -8,15 +8,14 @@
       "name": "AppApplication",
       "request": "launch",
       "mainClass": "dev.huha123.app.AppApplication",
-      "projectName": "app-dev-spring-boot"
+      "projectName": "dev-spring-boot"
     },
     {
       "type": "java",
       "name": "AppApplication",
       "request": "launch",
       "mainClass": "dev.huha123.app.AppApplication",
-      "projectName": "dev-spring-boot",
-      "args": "",
+      "projectName": "app-dev-spring-boot",
       "vmArgs": [
         "-Dfile.encoding=UTF-8"
       ]
