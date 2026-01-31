@@ -11,8 +11,8 @@ INSERT INTO users (username, password, email, role) VALUES
 
 
 INSERT INTO roles (id, role_name, parent_id) VALUES (1, 'ADMIN', NULL);
-INSERT INTO roles (id, role_name, parent_id) VALUES (2, 'MANAGER_1', 1);
-INSERT INTO roles (id, role_name, parent_id) VALUES (3, 'MANAGER_2', 1);
-INSERT INTO roles (id, role_name, parent_id) VALUES (4, 'MANAGER_3', 1);
+INSERT INTO roles (id, role_name, parent_id) VALUES (2, 'MANAGER', 1);
+INSERT INTO roles (id, role_name, parent_id) VALUES (3, 'MANAGER_1', 2);
+INSERT INTO roles (id, role_name, parent_id) VALUES (4, 'ETC', 1);
 -- INSERT INTO roles (id, role_name, parent_id) VALUES (5, 'USER', 2);
 --

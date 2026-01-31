@@ -1,7 +1,7 @@
 package dev.huha123.app.config;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.stream.Collectors;
+
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,6 +18,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import dev.huha123.app.service.RoleService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,48 +31,56 @@ import lombok.extern.slf4j.Slf4j;
 public class SecurityConfig {
     private final RoleService roleService;
     private final ObjectMapper objectMapper;
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
+            throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, JwtFilter jwtFilter) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
-        .httpBasic(AbstractHttpConfigurer::disable)
-        .formLogin(AbstractHttpConfigurer::disable)
-        .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-        .authorizeHttpRequests(auth -> auth
-            .requestMatchers("/", "/login/*", "/oauth2/**", "/api/login", "/api/users", "/h2-console/**").permitAll()
-            .requestMatchers("/api/test/user").hasRole("USER")
-            .requestMatchers("/api/test/manager").hasRole("MANAGER")
-            .requestMatchers("/api/test/admin").hasRole("ADMIN")
-            .requestMatchers("/api/admin/**").hasRole("ADMIN")
-            .anyRequest().authenticated()
-        )
-        // .oauth2Login(oauth2 -> oauth2.successHandler(oAuth2SuccessHandler))  // OAuth2 로그인 사용 시 주석 해제
-        .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
-        ;
+                .httpBasic(AbstractHttpConfigurer::disable)
+                .formLogin(AbstractHttpConfigurer::disable)
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/", "/login/*", "/oauth2/**", "/api/login", "/api/users", "/h2-console/**")
+                        .permitAll()
+                        .requestMatchers("/api/test/user").hasRole("USER")
+                        .requestMatchers("/api/test/manager").hasRole("MANAGER")
+                        .requestMatchers("/api/test/admin").hasRole("ADMIN")
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                        .anyRequest().authenticated())
+                // .oauth2Login(oauth2 -> oauth2.successHandler(oAuth2SuccessHandler)) // OAuth2
+                // 로그인 사용 시 주석 해제
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
     @Bean
     public RoleHierarchy roleHierarchy() {
+        // 기본값만 반환 (DB 데이터는 ApplicationRunner에서 동적 설정)
         try {
-            log.info("########## All roles from DB: {}", objectMapper.writeValueAsString(roleService.getAllRoles()));
-        } catch (JsonProcessingException e) {
-            log.error("Could not serialize roles to JSON", e);
-        }
-        // 계층 구조 설정
-        // ADMIN > MANAGER > USER
-        // 만약 manager1, 2, 3이 병렬이라면 아래와 같이 설정 가능:
-        // "ROLE_ADMIN > ROLE_MANAGER1\nROLE_ADMIN > ROLE_MANAGER2\nROLE_MANAGER1 > ROLE_USER\nROLE_MANAGER2 > ROLE_USER"
-        return RoleHierarchyImpl.fromHierarchy("ADMIN > MANAGER\nMANAGER > USER");
+                log.info("########## RoleHierarchy - All roles from DB: {}",
+                        objectMapper.writeValueAsString(roleService.getAllRoles()));
+
+                String hierarchy = roleService.getAllRoles().stream()
+                        .filter(role -> role.getParentId() != null)
+                        .map(role -> roleService.getRoleById(role.getParentId()).getName() + " > " + role.getName())
+                        .collect(Collectors.joining("\n"));
+                        log.info("########## Role Hierarchy Set:\n{}", hierarchy);
+                        return RoleHierarchyImpl.fromHierarchy(hierarchy);
+            } catch (JsonProcessingException e) {
+                log.error("Could not serialize roles to JSON", e);
+            }
+        return RoleHierarchyImpl.fromHierarchy("ADMIN > USER");
+
     }
 
     @Bean
@@ -79,11 +90,18 @@ public class SecurityConfig {
     }
 
     @Bean
-    public ApplicationRunner applicationRunner() {
+    public ApplicationRunner applicationRunner(RoleHierarchyImpl roleHierarchyImpl) {
         return args -> {
             try {
-                log.info("########## ApplicationRunner - All roles from DB: {}", objectMapper.writeValueAsString(roleService.getAllRoles()));
-                RoleHierarchyImpl.fromHierarchy("ADMIN > MANAGER");
+                log.info("########## ApplicationRunner - All roles from DB: {}",
+                        objectMapper.writeValueAsString(roleService.getAllRoles()));
+
+                String hierarchy = roleService.getAllRoles().stream()
+                        .filter(role -> role.getParentId() != null)
+                        .map(role -> roleService.getRoleById(role.getParentId()).getName() + " > " + role.getName())
+                        .collect(Collectors.joining("\n"));
+                roleHierarchyImpl.setHierarchy(hierarchy);
+                log.info("########## Role Hierarchy Set:\n{}", hierarchy);
             } catch (JsonProcessingException e) {
                 log.error("Could not serialize roles to JSON", e);
             }
