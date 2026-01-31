@@ -10,7 +10,7 @@ POST {{host}}/api/login
 Content-Type: {{contentType}}
 
 {
-  "username": "admin",
+  "username": "manager",
   "password": "1234"
 }
 
@@ -29,6 +29,11 @@ Authorization: Bearer {{token}}
 ### 5. Manager 권한 테스트
 # Manager, Admin 접근 가능 (User 토큰으로 요청 시 403 Forbidden)
 GET http://localhost:8080/api/test/manager
+Authorization: Bearer {{token}}
+
+### 5. Manager1 권한 테스트
+# Manager, manager1, Admin 접근 가능 (User 토큰으로 요청 시 403 Forbidden)
+GET http://localhost:8080/api/test/manager1
 Authorization: Bearer {{token}}
 
 ### 6. Admin 권한 테스트

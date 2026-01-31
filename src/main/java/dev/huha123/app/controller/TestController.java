@@ -18,6 +18,10 @@ public class TestController {
     public ResponseEntity<String> managerAccess() {
         return ResponseEntity.ok("Manager Access: MANAGER, ADMIN 권한 접근 가능");
     }
+    @GetMapping("/manager1")
+    public ResponseEntity<String> manager1Access() {
+        return ResponseEntity.ok("Manager1 Access: MANAGER_1, MANAGER, ADMIN 권한 접근 가능");
+    }
 
     @GetMapping("/admin")
     public ResponseEntity<String> adminAccess() {

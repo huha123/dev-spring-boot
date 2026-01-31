@@ -1,5 +1,8 @@
 package dev.huha123.app.config;
 
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.boot.ApplicationRunner;
@@ -18,10 +21,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import dev.huha123.app.service.RoleService;
+import dev.huha123.app.entity.RoleEntity;
+import dev.huha123.app.repository.RoleRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -29,7 +32,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j
 public class SecurityConfig {
-    private final RoleService roleService;
+    private final RoleRepository roleRepository;
     private final ObjectMapper objectMapper;
 
     @Bean
@@ -54,6 +57,7 @@ public class SecurityConfig {
                         .permitAll()
                         .requestMatchers("/api/test/user").hasRole("USER")
                         .requestMatchers("/api/test/manager").hasRole("MANAGER")
+                        .requestMatchers("/api/test/manager1").hasRole("MANAGER_1")
                         .requestMatchers("/api/test/admin").hasRole("ADMIN")
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated())
@@ -65,22 +69,40 @@ public class SecurityConfig {
 
     @Bean
     public RoleHierarchy roleHierarchy() {
-        // 기본값만 반환 (DB 데이터는 ApplicationRunner에서 동적 설정)
-        try {
-                log.info("########## RoleHierarchy - All roles from DB: {}",
-                        objectMapper.writeValueAsString(roleService.getAllRoles()));
+        return RoleHierarchyImpl.fromHierarchy(buildRoleHierarchyString());
+    }
 
-                String hierarchy = roleService.getAllRoles().stream()
-                        .filter(role -> role.getParentId() != null)
-                        .map(role -> roleService.getRoleById(role.getParentId()).getName() + " > " + role.getName())
-                        .collect(Collectors.joining("\n"));
-                        log.info("########## Role Hierarchy Set:\n{}", hierarchy);
-                        return RoleHierarchyImpl.fromHierarchy(hierarchy);
-            } catch (JsonProcessingException e) {
-                log.error("Could not serialize roles to JSON", e);
+    private String buildRoleHierarchyString() {
+        List<RoleEntity> allRoles = roleRepository.findAll();
+
+        // 1. 자식 노드를 가진 부모 ID 세트 생성 (Leaf Node 판별용)
+        Set<Long> parentIds = allRoles.stream()
+                .map(RoleEntity::getParent)
+                .filter(Objects::nonNull)
+                .map(RoleEntity::getId)
+                .collect(Collectors.toSet());
+
+        StringBuilder hierarchyBuilder = new StringBuilder();
+
+        for (RoleEntity role : allRoles) {
+            String currentRole = role.getRoleName();
+
+            // 부모가 있다면 관계 추가 (예: ROLE_ADMIN > ROLE_MANAGER)
+            if (role.getParent() != null) {
+                String parentRole = role.getParent().getRoleName();
+                hierarchyBuilder.append(parentRole)
+                        .append(" > ")
+                        .append(currentRole)
+                        .append("\n");
             }
-        return RoleHierarchyImpl.fromHierarchy("ADMIN > USER");
 
+            // 2. 이 역할이 최하위 노드(Leaf)라면 ROLE_USER 연결
+            if (!parentIds.contains(role.getId()) && !"USER".equals(role.getRoleName())) {
+                hierarchyBuilder.append(currentRole)
+                        .append(" > USER\n");
+            }
+        }
+        return hierarchyBuilder.toString();
     }
 
     @Bean
@@ -92,19 +114,8 @@ public class SecurityConfig {
     @Bean
     public ApplicationRunner applicationRunner(RoleHierarchyImpl roleHierarchyImpl) {
         return args -> {
-            try {
-                log.info("########## ApplicationRunner - All roles from DB: {}",
-                        objectMapper.writeValueAsString(roleService.getAllRoles()));
-
-                String hierarchy = roleService.getAllRoles().stream()
-                        .filter(role -> role.getParentId() != null)
-                        .map(role -> roleService.getRoleById(role.getParentId()).getName() + " > " + role.getName())
-                        .collect(Collectors.joining("\n"));
-                roleHierarchyImpl.setHierarchy(hierarchy);
-                log.info("########## Role Hierarchy Set:\n{}", hierarchy);
-            } catch (JsonProcessingException e) {
-                log.error("Could not serialize roles to JSON", e);
-            }
+            roleHierarchyImpl.setHierarchy(buildRoleHierarchyString());
+            log.info("########## Role Hierarchy Set:\n{}", buildRoleHierarchyString());
         };
     }
 
