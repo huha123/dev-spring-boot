@@ -1,5 +1,8 @@
 package dev.huha123.app.config;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
@@ -15,14 +18,16 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import dev.huha123.app.service.RoleService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Configuration
 @RequiredArgsConstructor
+@Slf4j
 public class SecurityConfig {
-
-    private final JwtFilter jwtFilter;
-
+    private final RoleService roleService;
+    private final ObjectMapper objectMapper;
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -34,7 +39,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, JwtFilter jwtFilter) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
         .httpBasic(AbstractHttpConfigurer::disable)
         .formLogin(AbstractHttpConfigurer::disable)
@@ -54,7 +59,12 @@ public class SecurityConfig {
     }
 
     @Bean
-    public static RoleHierarchy roleHierarchy() {
+    public RoleHierarchy roleHierarchy() {
+        try {
+            log.info("########## All roles from DB: {}", objectMapper.writeValueAsString(roleService.getAllRoles()));
+        } catch (JsonProcessingException e) {
+            log.error("Could not serialize roles to JSON", e);
+        }
         // 계층 구조 설정
         // ADMIN > MANAGER > USER
         // 만약 manager1, 2, 3이 병렬이라면 아래와 같이 설정 가능:
@@ -66,6 +76,18 @@ public class SecurityConfig {
     public GrantedAuthorityDefaults grantedAuthorityDefaults() {
         // 접두사 "ROLE_" 제거
         return new GrantedAuthorityDefaults("");
+    }
+
+    @Bean
+    public ApplicationRunner applicationRunner() {
+        return args -> {
+            try {
+                log.info("########## ApplicationRunner - All roles from DB: {}", objectMapper.writeValueAsString(roleService.getAllRoles()));
+                RoleHierarchyImpl.fromHierarchy("ADMIN > MANAGER");
+            } catch (JsonProcessingException e) {
+                log.error("Could not serialize roles to JSON", e);
+            }
+        };
     }
 
 }
