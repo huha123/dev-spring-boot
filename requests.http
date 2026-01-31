@@ -44,7 +44,7 @@ Content-Type: {{contentType}}
   "username": "testuser-{{randomInt}}",
   "email": "test-{{randomInt}}@example.com",
   "password": "1234",
-  "role": "USER"
+  "role": "MANAGER"
 }
 
 ### 모든 사용자 조회
@@ -56,7 +56,7 @@ GET {{host}}/api/users/1
 Authorization: Bearer {{token}}
 
 ### 사용자 이름으로 사용자 조회
-GET {{host}}/api/users/username/testuser
+GET {{host}}/api/users/username/admin
 Authorization: Bearer {{token}}
 
 ### 사용자 정보 수정
@@ -93,7 +93,8 @@ Content-Type: {{contentType}}
 Authorization: Bearer {{token}}
 
 {
-  "name": "NEW_ROLE"
+  "name": "NEW_ROLE",
+  "parent": 1
 }
 
 ### 역할 수정

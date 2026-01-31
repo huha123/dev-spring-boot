@@ -5,7 +5,7 @@
 
 INSERT INTO users (username, password, email, role) VALUES
 ('admin', '$2a$10$gPcAI0QFM1zvQFe2MXoEEuOuFFtk18tEsw3SkA4ZRl8cxkKE3vSlq', 'admin@example.com', 'ADMIN'),
-('user', '$2a$10$gPcAI0QFM1zvQFe2MXoEEuOuFFtk18tEsw3SkA4ZRl8cxkKE3vSlq', 'user@example.com', NULL),
+('user', '$2a$10$gPcAI0QFM1zvQFe2MXoEEuOuFFtk18tEsw3SkA4ZRl8cxkKE3vSlq', 'user@example.com', 'USER'),
 ('manager', '$2a$10$gPcAI0QFM1zvQFe2MXoEEuOuFFtk18tEsw3SkA4ZRl8cxkKE3vSlq', 'manager@example.com', 'MANAGER');
 
 
