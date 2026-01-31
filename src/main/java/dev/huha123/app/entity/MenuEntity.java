@@ -20,7 +20,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MenuEntity {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String menuName; // 메뉴명
@@ -32,12 +33,12 @@ public class MenuEntity {
     @JoinColumn(name = "parent_id")
     private MenuEntity parent;
 
-
     // 3. 권한 (이 메뉴는 누구에게 보일까?)
     private String role; // "ROLE_ADMIN", "ROLE_USER"
 
     // 4. 게시판이 아닌 일반 링크일 경우를 대비
     private String directUrl;
 
+    private boolean visible; // 메뉴 표시 여부
 
 }

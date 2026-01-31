@@ -10,7 +10,7 @@ POST {{host}}/api/login
 Content-Type: {{contentType}}
 
 {
-  "username": "user",
+  "username": "admin",
   "password": "1234"
 }
 
