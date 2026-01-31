@@ -10,7 +10,7 @@ POST {{host}}/api/login
 Content-Type: {{contentType}}
 
 {
-  "username": "manager",
+  "username": "user",
   "password": "1234"
 }
 
@@ -49,16 +49,20 @@ Content-Type: {{contentType}}
 
 ### 모든 사용자 조회
 GET {{host}}/api/users
+Authorization: Bearer {{token}}
 
 ### ID로 사용자 조회
 GET {{host}}/api/users/1
+Authorization: Bearer {{token}}
 
 ### 사용자 이름으로 사용자 조회
 GET {{host}}/api/users/username/testuser
+Authorization: Bearer {{token}}
 
 ### 사용자 정보 수정
 PUT {{host}}/api/users/1
 Content-Type: {{contentType}}
+Authorization: Bearer {{token}}
 
 {
   "username": "updateduser",
@@ -68,3 +72,37 @@ Content-Type: {{contentType}}
 
 ### 사용자 삭제
 DELETE {{host}}/api/users/1
+Authorization: Bearer {{token}}
+
+### 모든 역할 조회
+GET {{host}}/api/roles
+Authorization: Bearer {{token}}
+
+### 역할 계층 조회
+GET {{host}}/api/roles/hierarchy
+Authorization: Bearer {{token}}
+
+
+### 특정 역할 조회
+GET {{host}}/api/roles/1
+Authorization: Bearer {{token}}
+
+### 역할 생성
+POST {{host}}/api/roles
+Content-Type: {{contentType}}
+Authorization: Bearer {{token}}
+
+{
+  "name": "NEW_ROLE"
+}
+
+### 역할 수정
+PUT {{host}}/api/roles/1
+Content-Type: {{contentType}}
+Authorization: Bearer {{token}}
+{
+  "name": "UPDATED_ROLE"
+}
+
+### 역할 삭제
+DELETE {{host}}/api/roles/1

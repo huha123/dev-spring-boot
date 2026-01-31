@@ -1,29 +1,36 @@
 package dev.huha123.app.config;
 
-import dev.huha123.app.entity.UserEntity;
-import dev.huha123.app.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import dev.huha123.app.entity.UserEntity;
+import dev.huha123.app.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
+
 @Service
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
 
     private final UserRepository userRepository;
+    private final RoleHierarchy roleHierarchy;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         UserEntity user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
+                .orElseThrow(() -> new UsernameNotFoundException(
+                        "User not found with username: " + username));
 
         return User.builder()
                 .username(user.getUsername())
                 .password(user.getPassword())
-                .authorities(user.getRole())
+                .authorities(roleHierarchy.getReachableGrantedAuthorities(
+                        AuthorityUtils.createAuthorityList(
+                                user.getRole() != null ? user.getRole() : "USER")))
                 .build();
     }
 }
