@@ -16,4 +16,19 @@ INSERT INTO roles (id, role_name, parent_id) VALUES (2, 'MANAGER', 1);
 INSERT INTO roles (id, role_name, parent_id) VALUES (3, 'MANAGER_1', 2);
 INSERT INTO roles (id, role_name, parent_id) VALUES (4, 'ETC', 1);
 -- INSERT INTO roles (id, role_name, parent_id) VALUES (5, 'USER', 2);
---
+
+-- 계층형 메뉴 DDL (3개 메인 메뉴 + 하위 메뉴)
+-- 1. 마이페이지 메뉴
+INSERT INTO menu (id, menu_name, parent_id, role, path_url, visible, menu_type, sort_order) VALUES (10, '마이페이지', NULL, 'USER', '/mypage', true, 'board', 1);
+INSERT INTO menu (id, menu_name, parent_id, role, path_url, visible, menu_type, sort_order) VALUES (11, '개인 정보', 10, 'USER', '/mypage/info', true, 'static', 1);
+INSERT INTO menu (id, menu_name, parent_id, role, path_url, visible, menu_type, sort_order) VALUES (12, '비밀번호 변경', 10, 'USER', '/mypage/password', true, 'static', 2);
+
+-- 2. 게시판 메뉴
+INSERT INTO menu (id, menu_name, parent_id, role, path_url, visible, menu_type, sort_order) VALUES (20, '게시판', NULL, 'USER', '/board', true, 'board', 2);
+INSERT INTO menu (id, menu_name, parent_id, role, path_url, visible, menu_type, sort_order) VALUES (21, '공지사항', 20, 'USER', '/board/notice', true, 'board', 1);
+INSERT INTO menu (id, menu_name, parent_id, role, path_url, visible, menu_type, sort_order) VALUES (22, '자유게시판', 20, 'USER', '/board/free', true, 'board', 2);
+
+-- 3. 설정 메뉴
+INSERT INTO menu (id, menu_name, parent_id, role, path_url, visible, menu_type, sort_order) VALUES (30, '시스템 설정', NULL, 'ADMIN', '/system', true, 'static', 3);
+INSERT INTO menu (id, menu_name, parent_id, role, path_url, visible, menu_type, sort_order) VALUES (31, '메뉴 관리', 30, 'ADMIN', '/system/menu', true, 'static', 1);
+INSERT INTO menu (id, menu_name, parent_id, role, path_url, visible, menu_type, sort_order) VALUES (32, '권한 관리', 30, 'ADMIN', '/system/authority', true, 'static', 2);

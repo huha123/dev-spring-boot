@@ -7,6 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,9 +16,10 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@Builder
+@Builder(toBuilder = true)
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "menu")
 public class MenuEntity {
 
     @Id
@@ -28,17 +30,16 @@ public class MenuEntity {
 
     private int sortOrder; // 순서
 
-    // 1. 계층형 구조 (상위 메뉴)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
     private MenuEntity parent;
 
-    // 3. 권한 (이 메뉴는 누구에게 보일까?)
-    private String role; // "ROLE_ADMIN", "ROLE_USER"
+    private String role; // ADMIN", USER"
 
-    // 4. 게시판이 아닌 일반 링크일 경우를 대비
-    private String directUrl;
+    private String pathUrl; // 내부 경로 (예: "/home", "/profile")
 
     private boolean visible; // 메뉴 표시 여부
+
+    private String menuType; // board, static, etc
 
 }

@@ -1,0 +1,60 @@
+### 변수 설정
+@host = http://localhost:8080
+@contentType = application/json
+
+### /api/login - 로그인
+# @name login
+POST {{host}}/api/login
+Content-Type: {{contentType}}
+
+{
+  "username": "manager",
+  "password": "1234"
+}
+
+@token = {{login.response.body.token}}
+@auth_token = {{login.response.body.$.token}}
+
+### Get all menus
+GET http://localhost:8080/api/menus
+Authorization: Bearer {{auth_token}}
+
+### Get menu hierarchy
+GET http://localhost:8080/api/menus/hierarchy
+Authorization: Bearer {{auth_token}}
+
+### Get menu by id
+GET http://localhost:8080/api/menus/1
+Authorization: Bearer {{auth_token}}
+
+### Create menu
+POST http://localhost:8080/api/menus
+Content-Type: application/json
+Authorization: Bearer {{auth_token}}
+
+{
+    "menuName": "New Menu",
+    "sortOrder": 1,
+    "role": "USER",
+    "pathUrl": "/new-menu",
+    "visible": true,
+    "menuType": "static"
+}
+
+### Update menu
+PUT http://localhost:8080/api/menus/1
+Content-Type: application/json
+Authorization: Bearer {{auth_token}}
+
+{
+    "menuName": "Updated Menu",
+    "sortOrder": 2,
+    "role": "ADMIN",
+    "pathUrl": "/updated-menu",
+    "visible": false,
+    "menuType": "board"
+}
+
+### Delete menu
+DELETE http://localhost:8080/api/menus/1
+Authorization: Bearer {{auth_token}}
