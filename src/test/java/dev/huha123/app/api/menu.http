@@ -1,6 +1,7 @@
 ### 변수 설정
-@host = http://localhost:8080
-@contentType = application/json
+# @host = http://localhost:8080
+# @contentType = application/json
+@randomInt = {{$randomInt 1 10000}}
 
 ### /api/login - 로그인
 # @name login
@@ -23,6 +24,10 @@ Authorization: Bearer {{auth_token}}
 GET http://localhost:8080/api/menus/hierarchy
 Authorization: Bearer {{auth_token}}
 
+### Get visible menu hierarchy
+GET http://localhost:8080/api/menus/visible-hierarchy
+Authorization: Bearer {{auth_token}}
+
 ### Get menu by id
 GET http://localhost:8080/api/menus/1
 Authorization: Bearer {{auth_token}}
@@ -33,10 +38,10 @@ Content-Type: application/json
 Authorization: Bearer {{auth_token}}
 
 {
-    "menuName": "New Menu",
+    "menuName": "New Menu-{{randomInt}}",
     "sortOrder": 1,
     "role": "USER",
-    "pathUrl": "/new-menu",
+    "pathUrl": "/new-menu-{{randomInt}}",
     "visible": true,
     "menuType": "static"
 }

@@ -104,4 +104,24 @@ public class MenuService {
         dto.setChildren(children);
         return dto;
     }
+
+    public List<MenuDto> getVisibleMenuHierarchy() {
+        List<MenuEntity> allVisibleMenus = menuRepository.findAllByVisibleIsTrueOrderBySortOrderAsc();
+        return allVisibleMenus.stream()
+                .filter(menu -> menu.getParent() == null)
+                .map(menu -> buildVisibleHierarchy(menu, allVisibleMenus))
+                .collect(Collectors.toList());
+    }
+
+    private MenuDto buildVisibleHierarchy(MenuEntity menuEntity, List<MenuEntity> allVisibleMenus) {
+        MenuDto dto = MenuDto.fromEntity(menuEntity);
+
+        List<MenuDto> children = allVisibleMenus.stream()
+                .filter(menu -> menu.getParent() != null && menu.getParent().getId().equals(menuEntity.getId()))
+                .map(menu -> buildVisibleHierarchy(menu, allVisibleMenus))
+                .collect(Collectors.toList());
+
+        dto.setChildren(children);
+        return dto;
+    }
 }

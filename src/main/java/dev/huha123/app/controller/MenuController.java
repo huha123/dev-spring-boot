@@ -38,18 +38,23 @@ public class MenuController {
         return ResponseEntity.ok(menuService.getMenuHierarchy());
     }
 
+    @GetMapping("/visible-hierarchy")
+    public ResponseEntity<List<MenuDto>> getVisibleMenuHierarchy() {
+        return ResponseEntity.ok(menuService.getVisibleMenuHierarchy());
+    }
+
     @GetMapping("/{id}")
-    public ResponseEntity<MenuDto> getMenuById(@PathVariable Long id) {
+    public ResponseEntity<MenuDto> getMenuById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(menuService.getMenuById(id));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<MenuDto> updateMenu(@PathVariable Long id, @RequestBody MenuDto menuDto) {
+    public ResponseEntity<MenuDto> updateMenu(@PathVariable("id") Long id, @RequestBody MenuDto menuDto) {
         return ResponseEntity.ok(menuService.updateMenu(id, menuDto));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteMenu(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteMenu(@PathVariable("id") Long id) {
         menuService.deleteMenu(id);
         return ResponseEntity.noContent().build();
     }
