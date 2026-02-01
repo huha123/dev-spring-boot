@@ -1,0 +1,38 @@
+### login
+# @name login
+POST http://localhost:8080/api/login
+Content-Type: application/json
+
+{
+    "username": "admin",
+    "password": "1234"
+}
+
+@auth_token = {{login.response.body.$.token}}
+
+### Get all comments for a board
+GET http://localhost:8080/api/boards/1/comments
+Authorization: Bearer {{auth_token}}
+
+### Create comment
+POST http://localhost:8080/api/boards/1/comments
+Content-Type: application/json
+Authorization: Bearer {{auth_token}}
+
+{
+    "content": "New Comment",
+    "writer": "user"
+}
+
+### Update comment
+PUT http://localhost:8080/api/comments/1
+Content-Type: application/json
+Authorization: Bearer {{auth_token}}
+
+{
+    "content": "Updated Comment"
+}
+
+### Delete comment
+DELETE http://localhost:8080/api/comments/1
+Authorization: Bearer {{auth_token}}

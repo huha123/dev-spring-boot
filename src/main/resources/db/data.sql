@@ -39,3 +39,21 @@ INSERT INTO category (category_id, name, is_use) VALUES ('QNA', 'Q&A', true);
 INSERT INTO category (category_id, name, is_use) VALUES ('FAQ', 'FAQ', true);
 INSERT INTO category (category_id, name, is_use) VALUES ('EVENT', '이벤트', false);
 INSERT INTO category (category_id, name, is_use) VALUES ('HR', '인사관리', true);
+
+
+-- BoardEntity 관련 DDL
+INSERT INTO board (title, content, writer, category_id, is_visible, is_notice, is_secret) VALUES ('Welcome to the Notice Board', 'This is the first notice.', 'admin', 'NOTICE', true, true, false);
+INSERT INTO board (title, content, writer, category_id, is_visible, is_notice, is_secret) VALUES ('Free Board Guidelines', 'Please follow the rules when posting.', 'user', 'FREE', true, false, false);
+INSERT INTO board (title, content, writer, category_id, is_visible, is_notice, is_secret) VALUES ('Q&A Section Opened', 'Feel free to ask your questions here.', 'manager', 'QNA', true, false, false);
+INSERT INTO board (title, content, writer, category_id, is_visible, is_notice, is_secret) VALUES ('FAQ Updated', 'Check out the latest frequently asked questions.', 'admin', 'FAQ', true, false, false);
+INSERT INTO board (title, content, writer, category_id, is_visible, is_notice, is_secret) VALUES ('Upcoming Event Announcement',  'Join us for our upcoming event next month!', 'manager1', 'EVENT', true, false ,false);
+INSERT INTO board (title, content, writer, category_id, is_visible, is_notice, is_secret) VALUES ('HR Policy Changes', 'Please review the updated HR policies.', 'admin', 'HR', true, false, false);
+
+-- commentEntity 관련 DDL
+INSERT INTO board_comment (board_id, content, writer) VALUES (1, 'Thank you for the information!', 'user');
+INSERT INTO board_comment (board_id, content, writer) VALUES (1, 'Looking forward to more updates.', 'manager');
+INSERT INTO board_comment (board_id, content, writer) VALUES (2, 'Great guidelines, very helpful.', 'admin');
+INSERT INTO board_comment (board_id, content, writer) VALUES (3, 'I have a question about the Q&A section.', 'user');
+INSERT INTO board_comment (board_id, content, writer) VALUES (4, 'The FAQ is very comprehensive.', 'manager1');
+INSERT INTO board_comment (board_id, content, writer) VALUES (5, 'Excited for the event!', 'user');
+INSERT INTO board_comment (board_id, content, writer) VALUES (6, 'Thanks for the update on HR policies.', 'manager');

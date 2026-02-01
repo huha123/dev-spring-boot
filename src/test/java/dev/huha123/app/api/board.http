@@ -1,49 +1,52 @@
-### auth - login
+### login
 # @name login
-POST http://localhost:8080/member/login
-content-type: application/json
+POST http://localhost:8080/api/login
+Content-Type: application/json
 
 {
-    "email" : "admin@gmail.com",
-    "password" : "1"
+    "username": "admin",
+    "password": "1234"
 }
 
-@auth-token = {{login.response.headers.Authorization}}
+@auth_token = {{login.response.body.$.token}}
 
-### board - find all
-GET http://localhost:8080/board
-content-type: application/json
-Authorization: {{auth-token}}
+### Get all boards
+GET http://localhost:8080/api/boards
+Authorization: Bearer {{auth_token}}
 
-### board - find all
-GET http://localhost:8080/board?size=10&sort=id,asc
-content-type: application/json
-Authorization: {{auth-token}}
+### Get board by id
+GET http://localhost:8080/api/boards/1
+Authorization: Bearer {{auth_token}}
 
-### board - insert
-POST http://localhost:8080/board
-content-type: application/json
-Authorization: {{auth-token}}
+### Create board
+POST http://localhost:8080/api/boards
+Content-Type: application/json
+Authorization: Bearer {{auth_token}}
 
 {
-    "title" : "제목입니다.",
-    "content" : "내용입니다.",
-    "password" : "{{$guid}}"
+    "title": "New Board",
+    "content": "New Content",
+    "writer": "user",
+    "categoryId": "NOTICE",
+    "isVisible": true,
+    "isNotice": false,
+    "isSecret": false
 }
 
-### board - update
-PUT http://localhost:8080/board
-content-type: application/json
-Authorization: {{auth-token}}
+### Update board
+PUT http://localhost:8080/api/boards/1
+Content-Type: application/json
+Authorization: Bearer {{auth_token}}
 
 {
-    "id" : 2,
-    "title" : "제목입니다 111111.",
-    "content" : "내용입니다 1111111.",
-    "password" : "1234"
+    "title": "Updated Board",
+    "content": "Updated Content",
+    "categoryId": "QNA",
+    "isVisible": false,
+    "isNotice": true,
+    "isSecret": true
 }
 
-### board - delete
-DELETE http://localhost:8080/board/2
-content-type: application/json
-Authorization: {{auth-token}}
+### Delete board
+DELETE http://localhost:8080/api/boards/1
+Authorization: Bearer {{auth_token}}
