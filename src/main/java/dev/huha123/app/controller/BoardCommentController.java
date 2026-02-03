@@ -22,8 +22,8 @@ public class BoardCommentController {
     }
 
     @GetMapping("/boards/{boardId}/comments")
-    public ResponseEntity<List<BoardCommentDto>> getCommentsByBoardId(@PathVariable("boardId") Long boardId) {
-        return ResponseEntity.ok(boardCommentService.getCommentsByBoardId(boardId));
+    public ResponseEntity<List<BoardCommentDto>> getCommentsByBoardId(@PathVariable("boardId") Long boardId, java.security.Principal principal) {
+        return ResponseEntity.ok(boardCommentService.getCommentsByBoardId(boardId, principal));
     }
 
     @PutMapping("/comments/{id}")

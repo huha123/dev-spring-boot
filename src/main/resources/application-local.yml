@@ -28,6 +28,10 @@ logging:
     org:
       springframework:
         security: DEBUG
+      hibernate:
+        orm:
+          jdbc:
+            bind: TRACE
 
 jwt:
   secret: v3ryS3cr3tK3yMustB3L0ngEn0ughF0rHMACSHA256! # 32자 이상 권장

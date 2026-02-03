@@ -26,8 +26,8 @@ public class BoardController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<BoardDto> getBoardById(@PathVariable("id") Long id) {
-        return ResponseEntity.ok(boardService.getBoardById(id));
+    public ResponseEntity<BoardDto> getBoardById(@PathVariable("id") Long id, java.security.Principal principal) {
+        return ResponseEntity.ok(boardService.getBoardById(id, principal));
     }
 
     @PutMapping("/{id}")

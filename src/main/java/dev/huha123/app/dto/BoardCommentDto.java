@@ -18,6 +18,8 @@ public class BoardCommentDto {
     private String content;
     private String writer;
     private Long boardId;
+    private long likeCount;
+    private boolean liked;
 
     public static BoardCommentDto fromEntity(BoardCommentEntity entity) {
         return BoardCommentDto.builder()
@@ -25,6 +27,8 @@ public class BoardCommentDto {
                 .content(entity.getContent())
                 .writer(entity.getWriter())
                 .boardId(entity.getBoard().getId())
+                .likeCount(entity.getLikeCount())
+                .liked(entity.isLiked())
                 .build();
     }
 }

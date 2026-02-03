@@ -20,6 +20,7 @@ public class BoardService {
     private final BoardRepository boardRepository;
     private final CategoryRepository categoryRepository;
     private final BoardCommentService boardCommentService;
+    private final dev.huha123.app.like.LikeService likeService;
 
     @Transactional
     public BoardDto createBoard(BoardDto boardDto) {
@@ -42,16 +43,24 @@ public class BoardService {
 
     public List<BoardDto> getAllBoards() {
         return boardRepository.findAll().stream()
-                .map(BoardDto::fromEntity)
+                .map(boardEntity -> {
+                    boardEntity.setLikeCount(likeService.getLikeCount(dev.huha123.app.like.LikeType.BOARD, boardEntity.getId()));
+                    return BoardDto.fromEntity(boardEntity);
+                })
                 .collect(Collectors.toList());
     }
 
-    public BoardDto getBoardById(Long id) {
-        BoardDto boardDto = boardRepository.findById(id)
-                .map(BoardDto::fromEntity)
+    public BoardDto getBoardById(Long id, java.security.Principal principal) {
+        BoardEntity boardEntity = boardRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Board not found"));
 
-        boardDto.setComments(boardCommentService.getCommentsByBoardId(id));
+        boardEntity.setLikeCount(likeService.getLikeCount(dev.huha123.app.like.LikeType.BOARD, boardEntity.getId()));
+        if (principal != null) {
+            boardEntity.setLiked(likeService.isLiked(principal.getName(), dev.huha123.app.like.LikeType.BOARD, boardEntity.getId()));
+        }
+
+        BoardDto boardDto = BoardDto.fromEntity(boardEntity);
+        boardDto.setComments(boardCommentService.getCommentsByBoardId(id, principal));
         return boardDto;
     }
 

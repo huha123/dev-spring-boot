@@ -44,4 +44,18 @@ public class BoardEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private CategoryEntity category;
+
+    @jakarta.persistence.Transient
+    private long likeCount;
+
+    @jakarta.persistence.Transient
+    private boolean liked;
+
+    public void setLikeCount(long likeCount) {
+        this.likeCount = likeCount;
+    }
+
+    public void setLiked(boolean liked) {
+        this.liked = liked;
+    }
 }

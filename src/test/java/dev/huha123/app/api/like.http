@@ -1,0 +1,20 @@
+### login
+# @name login
+POST http://localhost:8080/api/login
+Content-Type: application/json
+
+{
+    "username": "manager",
+    "password": "1234"
+}
+
+@auth_token = {{login.response.body.$.token}}
+
+
+### Like a board
+POST http://localhost:8080/likes/board/1
+Authorization: Bearer {{auth_token}}
+
+### Like a board comment
+POST http://localhost:8080/likes/board-comment/1
+Authorization: Bearer {{auth_token}}

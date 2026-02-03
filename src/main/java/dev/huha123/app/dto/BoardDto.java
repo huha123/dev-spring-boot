@@ -25,6 +25,8 @@ public class BoardDto {
     private boolean isVisible;
     private boolean isNotice;
     private boolean isSecret;
+    private long likeCount;
+    private boolean liked;
     private List<BoardCommentDto> comments;
 
     public static BoardDto fromEntity(BoardEntity entity) {
@@ -38,6 +40,8 @@ public class BoardDto {
                 .isVisible(entity.isVisible())
                 .isNotice(entity.isNotice())
                 .isSecret(entity.isSecret())
+                .likeCount(entity.getLikeCount())
+                .liked(entity.isLiked())
                 .build();
     }
 }

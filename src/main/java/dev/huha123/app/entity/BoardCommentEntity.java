@@ -37,4 +37,18 @@ public class BoardCommentEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_id")
     private BoardEntity board;
+
+    @jakarta.persistence.Transient
+    private long likeCount;
+
+    @jakarta.persistence.Transient
+    private boolean liked;
+
+    public void setLikeCount(long likeCount) {
+        this.likeCount = likeCount;
+    }
+
+    public void setLiked(boolean liked) {
+        this.liked = liked;
+    }
 }

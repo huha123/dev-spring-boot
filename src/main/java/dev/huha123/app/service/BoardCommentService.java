@@ -19,6 +19,7 @@ public class BoardCommentService {
 
     private final BoardCommentRepository boardCommentRepository;
     private final BoardRepository boardRepository;
+    private final dev.huha123.app.like.LikeService likeService;
 
     @Transactional
     public BoardCommentDto createComment(BoardCommentDto commentDto) {
@@ -34,9 +35,15 @@ public class BoardCommentService {
         return BoardCommentDto.fromEntity(boardCommentRepository.save(comment));
     }
 
-    public List<BoardCommentDto> getCommentsByBoardId(Long boardId) {
+    public List<BoardCommentDto> getCommentsByBoardId(Long boardId, java.security.Principal principal) {
         return boardCommentRepository.findByBoardId(boardId).stream()
-                .map(BoardCommentDto::fromEntity)
+                .map(commentEntity -> {
+                    commentEntity.setLikeCount(likeService.getLikeCount(dev.huha123.app.like.LikeType.BOARD_COMMENT, commentEntity.getId()));
+                    if (principal != null) {
+                        commentEntity.setLiked(likeService.isLiked(principal.getName(), dev.huha123.app.like.LikeType.BOARD_COMMENT, commentEntity.getId()));
+                    }
+                    return BoardCommentDto.fromEntity(commentEntity);
+                })
                 .collect(Collectors.toList());
     }
 
