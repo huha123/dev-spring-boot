@@ -23,8 +23,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import dev.huha123.app.entity.RoleEntity;
-import dev.huha123.app.repository.RoleRepository;
+import dev.huha123.app.domain.role.RoleEntity;
+import dev.huha123.app.domain.role.RoleRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
