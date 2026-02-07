@@ -58,8 +58,8 @@ public class BoardService {
 
         boardEntity.setLikeCount(likeService.getLikeCount(LikeType.BOARD, boardEntity.getId()));
         if (principal != null) {
-            boardEntity.setLiked(
-                    likeService.isLiked(principal.getName(), LikeType.BOARD, boardEntity.getId()));
+            boardEntity
+                    .setLiked(likeService.isLiked(principal.getName(), LikeType.BOARD, boardEntity.getId()));
         }
 
         BoardDto boardDto = BoardDto.fromEntity(boardEntity);

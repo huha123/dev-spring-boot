@@ -51,8 +51,8 @@ public class FileService {
 
             // DB에 파일 메타데이터 저장
             FileEntity fileEntity = FileEntity.builder().originalName(file.getOriginalFilename())
-                    .contentType(file.getContentType()).sizeBytes(file.getSize()).s3Bucket(bucketName).s3Key(s3Key)
-                    .s3Region(region).board(board).build();
+                    .contentType(file.getContentType()).sizeBytes(file.getSize()).s3Bucket(bucketName)
+                    .s3Key(s3Key).s3Region(region).board(board).build();
             log.info("Saved file: {} -> s3://{}/{}", file.getOriginalFilename(), bucketName, s3Key);
             savedFiles.add(fileRepository.save(fileEntity));
         }
@@ -79,9 +79,9 @@ public class FileService {
 
             // DB에 파일 메타데이터 저장
             log.info("Saved file: {} -> s3://{}/{}", file.getOriginalFilename(), bucketName, s3Key);
-            savedFiles.add(
-                    FileEntity.builder().originalName(file.getOriginalFilename()).contentType(file.getContentType())
-                            .sizeBytes(file.getSize()).s3Bucket(bucketName).s3Key(s3Key).s3Region(region).build());
+            savedFiles.add(FileEntity.builder().originalName(file.getOriginalFilename())
+                    .contentType(file.getContentType()).sizeBytes(file.getSize()).s3Bucket(bucketName)
+                    .s3Key(s3Key).s3Region(region).build());
         }
 
         return savedFiles;
