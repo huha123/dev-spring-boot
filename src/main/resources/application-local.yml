@@ -2,8 +2,6 @@ spring:
   config:
     activate:
       on-profile: local
-
-  output.ansi.enabled: always
   datasource:
     url: jdbc:h2:mem:testdb
     driver-class-name: org.h2.Driver
@@ -13,6 +11,7 @@ spring:
     init:
       data-locations: classpath:/db/data.sql # 예: resources/custom-data.sql 로 변경
   jpa:
+    open-in-view: false
     defer-datasource-initialization: true
     hibernate:
       ddl-auto: create-drop
@@ -20,19 +19,6 @@ spring:
     properties:
       hibernate:
         format_sql: true
+        default_batch_fetch_size: 100
   jackson:
     default-property-inclusion: non_empty
-
-logging:
-  level:
-    org:
-      springframework:
-        security: DEBUG
-      hibernate:
-        orm:
-          jdbc:
-            bind: TRACE
-
-jwt:
-  secret: v3ryS3cr3tK3yMustB3L0ngEn0ughF0rHMACSHA256! # 32자 이상 권장
-  expiration: 86400000 # 1일 (밀리초 단위)

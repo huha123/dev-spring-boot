@@ -17,8 +17,8 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@Builder(toBuilder = true)
 @AllArgsConstructor
+@Builder(toBuilder = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "board_comment")
 public class BoardCommentEntity {

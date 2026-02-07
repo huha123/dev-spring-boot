@@ -29,7 +29,6 @@ public class BoardCommentService {
                 .writer(commentDto.writer())
                 .board(board)
                 .build();
-
         return BoardCommentDto.fromEntity(boardCommentRepository.save(comment));
     }
 
@@ -44,6 +43,7 @@ public class BoardCommentService {
                 })
                 .collect(Collectors.toList());
     }
+
 
     @Transactional
     public BoardCommentDto updateComment(Long id, BoardCommentDto commentDto) {

@@ -1,11 +1,16 @@
 {
-    "java.compile.nullAnalysis.mode": "automatic",
-    "java.configuration.updateBuildConfiguration": "automatic",
-    "java.dependency.packagePresentation": "hierarchical",
-    "rest-client.environmentVariables": {
-        "$shared": {
-            "host": "http://localhost:8080",
-            "contentType": "application/json",
-        }
+  "java.compile.nullAnalysis.mode": "automatic",
+  "java.configuration.updateBuildConfiguration": "automatic",
+  "java.dependency.packagePresentation": "hierarchical",
+  "rest-client.environmentVariables": {
+    "$shared": {
+      "host": "http://localhost:8080",
+      "contentType": "application/json"
     }
+  },
+  "java.format.settings.url": ".vscode/java-formatter.xml",
+  "[java]": {
+    "editor.insertSpaces": true,
+    "editor.detectIndentation": true
+  }
 }

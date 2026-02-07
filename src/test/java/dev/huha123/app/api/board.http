@@ -4,7 +4,7 @@ POST http://localhost:8080/api/login
 Content-Type: application/json
 
 {
-    "username": "manager",
+    "username": "admin",
     "password": "1234"
 }
 
@@ -49,4 +49,92 @@ Authorization: Bearer {{auth_token}}
 
 ### Delete board
 DELETE http://localhost:8080/api/boards/1
+Authorization: Bearer {{auth_token}}
+
+### Create board with files
+# Note: Create a dummy file 'file1.txt' in the same directory as this http file.
+POST http://localhost:8080/api/boards
+Authorization: Bearer {{auth_token}}
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="board"
+Content-Type: application/json
+
+{
+    "title": "Board with Files",
+    "content": "Content with files",
+    "writer": "user",
+    "categoryId": "FREE",
+    "isVisible": true,
+    "isNotice": false,
+    "isSecret": false
+}
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="files"; filename="file1.txt"
+Content-Type: text/plain
+
+< ./file1.txt
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="files"; filename="file2.txt"
+Content-Type: text/plain
+
+< ./file2.txt
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="files"; filename="file3.txt"
+Content-Type: text/plain
+
+< ./file3.txt
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+
+### Update board with files
+# Note: Create a dummy file 'updated_file.txt' in the same directory as this http file.
+PUT http://localhost:8080/api/boards/1
+Authorization: Bearer {{auth_token}}
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="board"
+Content-Type: application/json
+
+{
+    "title": "Updated Board with Files",
+    "content": "Updated content with new files",
+    "categoryId": "QNA"
+}
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="files"; filename="updated_file.txt"
+Content-Type: text/plain
+
+< ./updated_file.txt
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+
+### Get comments for board 1
+GET http://localhost:8080/api/boards/1/comments
+Authorization: Bearer {{auth_token}}
+
+### Create comment for board 1
+POST http://localhost:8080/api/boards/1/comments
+Content-Type: application/json
+Authorization: Bearer {{auth_token}}
+
+{
+    "content": "This is a new comment."
+}
+
+### Update comment 1
+PUT http://localhost:8080/api/comments/1
+Content-Type: application/json
+Authorization: Bearer {{auth_token}}
+
+{
+    "content": "This is an updated comment."
+}
+
+### Delete comment 1
+DELETE http://localhost:8080/api/comments/1
 Authorization: Bearer {{auth_token}}

@@ -23,7 +23,7 @@ public class BoardCommentController {
 
     @PostMapping("/boards/{boardId}/comments")
     public ResponseEntity<BoardCommentDto> createComment(@PathVariable("boardId") Long boardId, @RequestBody BoardCommentDto commentDto) {
-        commentDto = commentDto.withBoardId(boardId);
+        commentDto = commentDto.toBuilder().boardId(boardId).build();
         return ResponseEntity.ok(boardCommentService.createComment(commentDto));
     }
 

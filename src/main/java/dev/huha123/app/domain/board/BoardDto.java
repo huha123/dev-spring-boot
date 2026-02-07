@@ -2,10 +2,11 @@ package dev.huha123.app.domain.board;
 
 import java.util.List;
 
+import dev.huha123.app.domain.file.FileDto;
 import lombok.Builder;
 import lombok.With;
 
-@Builder
+@Builder(toBuilder = true)
 @With
 public record BoardDto(
     Long id,
@@ -19,7 +20,8 @@ public record BoardDto(
     boolean isSecret,
     long likeCount,
     boolean liked,
-    List<BoardCommentDto> comments
+    List<BoardCommentDto> comments,
+    List<FileDto> files
 ) {
 
     public static BoardDto fromEntity(BoardEntity entity) {
@@ -35,6 +37,8 @@ public record BoardDto(
                 .isSecret(entity.isSecret())
                 .likeCount(entity.getLikeCount())
                 .liked(entity.isLiked())
+                .comments(entity.getComments().stream().map(BoardCommentDto::fromEntity).toList())
+                .files(entity.getFiles().stream().map(FileDto::fromEntity).toList())
                 .build();
     }
 

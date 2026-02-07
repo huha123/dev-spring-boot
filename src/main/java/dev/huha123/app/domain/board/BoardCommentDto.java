@@ -1,10 +1,8 @@
 package dev.huha123.app.domain.board;
 
 import lombok.Builder;
-import lombok.With;
 
-@Builder
-@With
+@Builder(toBuilder = true)
 public record BoardCommentDto(
         Long id,
         String content,
