@@ -1,25 +1,18 @@
 package dev.huha123.app.dto;
 
 import dev.huha123.app.entity.BoardCommentEntity;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.With;
 
-@Getter
-@Setter
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class BoardCommentDto {
-
-    private Long id;
-    private String content;
-    private String writer;
-    private Long boardId;
-    private long likeCount;
-    private boolean liked;
+@With
+public record BoardCommentDto(
+        Long id,
+        String content,
+        String writer,
+        Long boardId,
+        long likeCount,
+        boolean liked) {
 
     public static BoardCommentDto fromEntity(BoardCommentEntity entity) {
         return BoardCommentDto.builder()
@@ -31,4 +24,14 @@ public class BoardCommentDto {
                 .liked(entity.isLiked())
                 .build();
     }
+
+    public BoardCommentEntity toEntity() {
+        return BoardCommentEntity.builder()
+                .id(id())
+                .content(content())
+                .writer(writer())
+                .likeCount(likeCount())
+                .build();
+    }
+
 }

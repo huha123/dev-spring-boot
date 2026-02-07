@@ -20,19 +20,19 @@ public class MenuService {
     @Transactional
     public MenuDto createMenu(MenuDto menuDto) {
         MenuEntity parent = null;
-        if (menuDto.getParentId() != null) {
-            parent = menuRepository.findById(menuDto.getParentId())
+        if (menuDto.parentId() != null) {
+            parent = menuRepository.findById(menuDto.parentId())
                     .orElseThrow(() -> new IllegalArgumentException("Parent menu not found"));
         }
 
         MenuEntity menu = MenuEntity.builder()
-                .menuName(menuDto.getMenuName())
-                .sortOrder(menuDto.getSortOrder())
+                .menuName(menuDto.menuName())
+                .sortOrder(menuDto.sortOrder())
                 .parent(parent)
-                .role(menuDto.getRole())
-                .pathUrl(menuDto.getPathUrl())
-                .visible(menuDto.isVisible())
-                .menuType(menuDto.getMenuType())
+                .role(menuDto.role())
+                .pathUrl(menuDto.pathUrl())
+                .visible(menuDto.visible())
+                .menuType(menuDto.menuType())
                 .build();
 
         return MenuDto.fromEntity(menuRepository.save(menu));
@@ -55,28 +55,21 @@ public class MenuService {
         MenuEntity menu = menuRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Menu not found"));
 
-        if (menuDto.getMenuName() != null) {
-            menu = menu.toBuilder().menuName(menuDto.getMenuName()).build();
-        }
-        if (menuDto.getSortOrder() != 0) {
-            menu = menu.toBuilder().sortOrder(menuDto.getSortOrder()).build();
-        }
-        if (menuDto.getRole() != null) {
-            menu = menu.toBuilder().role(menuDto.getRole()).build();
-        }
-        if (menuDto.getPathUrl() != null) {
-            menu = menu.toBuilder().pathUrl(menuDto.getPathUrl()).build();
-        }
-        if (menuDto.getMenuType() != null) {
-            menu = menu.toBuilder().menuType(menuDto.getMenuType()).build();
-        }
-
         MenuEntity parent = null;
-        if (menuDto.getParentId() != null) {
-            parent = menuRepository.findById(menuDto.getParentId())
+        if (menuDto.parentId() != null) {
+            parent = menuRepository.findById(menuDto.parentId())
                     .orElseThrow(() -> new IllegalArgumentException("Parent menu not found"));
         }
-        menu = menu.toBuilder().parent(parent).build();
+
+        menu = menu.toBuilder()
+                .menuName(menuDto.menuName())
+                .sortOrder(menuDto.sortOrder())
+                .role(menuDto.role())
+                .pathUrl(menuDto.pathUrl())
+                .visible(menuDto.visible())
+                .menuType(menuDto.menuType())
+                .parent(parent)
+                .build();
 
         return MenuDto.fromEntity(menuRepository.save(menu));
     }
@@ -101,7 +94,7 @@ public class MenuService {
                 .map(this::buildHierarchy)
                 .collect(Collectors.toList());
 
-        dto.setChildren(children);
+        dto = dto.withChildren(children);
         return dto;
     }
 
@@ -121,7 +114,7 @@ public class MenuService {
                 .map(menu -> buildVisibleHierarchy(menu, allVisibleMenus))
                 .collect(Collectors.toList());
 
-        dto.setChildren(children);
+        dto = dto.withChildren(children);
         return dto;
     }
 }

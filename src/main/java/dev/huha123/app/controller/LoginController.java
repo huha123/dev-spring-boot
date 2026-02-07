@@ -20,7 +20,7 @@ public class LoginController {
     @PostMapping("/api/login")
     public ResponseEntity<?> login(@RequestBody UserDto userDto) {
         try {
-            String token = userService.login(userDto.getUsername(), userDto.getPassword());
+            String token = userService.login(userDto.username(), userDto.password());
             return ResponseEntity.ok(Map.of("token", token));
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));

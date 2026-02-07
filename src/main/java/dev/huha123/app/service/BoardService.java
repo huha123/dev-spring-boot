@@ -24,15 +24,15 @@ public class BoardService {
 
     @Transactional
     public BoardDto createBoard(BoardDto boardDto) {
-        CategoryEntity category = categoryRepository.findById(boardDto.getCategoryId())
+        CategoryEntity category = categoryRepository.findById(boardDto.categoryId())
                 .orElseThrow(() -> new IllegalArgumentException("Category not found"));
 
         BoardEntity board = BoardEntity.builder()
-                .title(boardDto.getTitle())
-                .content(boardDto.getContent())
-                .writer(boardDto.getWriter())
+                .title(boardDto.title())
+                .content(boardDto.content())
+                .writer(boardDto.writer())
                 .category(category)
-                .viewCount(boardDto.getViewCount())
+                .viewCount(boardDto.viewCount())
                 .isVisible(boardDto.isVisible())
                 .isNotice(boardDto.isNotice())
                 .isSecret(boardDto.isSecret())
@@ -60,7 +60,7 @@ public class BoardService {
         }
 
         BoardDto boardDto = BoardDto.fromEntity(boardEntity);
-        boardDto.setComments(boardCommentService.getCommentsByBoardId(id, principal));
+        boardDto = boardDto.withComments(boardCommentService.getCommentsByBoardId(id, principal));
         return boardDto;
     }
 
@@ -69,12 +69,12 @@ public class BoardService {
         BoardEntity board = boardRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Board not found"));
 
-        CategoryEntity category = categoryRepository.findById(boardDto.getCategoryId())
+        CategoryEntity category = categoryRepository.findById(boardDto.categoryId())
                 .orElseThrow(() -> new IllegalArgumentException("Category not found"));
 
         board = board.toBuilder()
-                .title(boardDto.getTitle())
-                .content(boardDto.getContent())
+                .title(boardDto.title())
+                .content(boardDto.content())
                 .category(category)
                 .isVisible(boardDto.isVisible())
                 .isNotice(boardDto.isNotice())

@@ -41,7 +41,7 @@ public class CategoryService {
                 .orElseThrow(() -> new IllegalArgumentException("Category not found"));
 
         category = category.toBuilder()
-                .name(categoryDto.getName())
+                .name(categoryDto.name())
                 .isUse(categoryDto.isUse())
                 .build();
 

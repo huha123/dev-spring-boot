@@ -20,13 +20,13 @@ public class RoleService {
     @Transactional
     public RoleDto createRole(RoleDto roleDto) {
         RoleEntity parent = null;
-        if (roleDto.getParentId() != null) {
-            parent = roleRepository.findById(roleDto.getParentId())
+        if (roleDto.parentId() != null) {
+            parent = roleRepository.findById(roleDto.parentId())
                     .orElseThrow(() -> new IllegalArgumentException("Parent role not found"));
         }
 
         RoleEntity role = RoleEntity.builder()
-                .roleName(roleDto.getName())
+                .roleName(roleDto.name())
                 .parent(parent)
                 .build();
 
@@ -50,13 +50,13 @@ public class RoleService {
         RoleEntity role = roleRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Role not found"));
 
-        if (roleDto.getName() != null) {
-            role.setRoleName(roleDto.getName());
+        if (roleDto.name() != null) {
+            role.setRoleName(roleDto.name());
         }
 
         RoleEntity parent = null;
-        if (roleDto.getParentId() != null) {
-            parent = roleRepository.findById(roleDto.getParentId())
+        if (roleDto.parentId() != null) {
+            parent = roleRepository.findById(roleDto.parentId())
                     .orElseThrow(() -> new IllegalArgumentException("Parent role not found"));
         }
         role.setParent(parent);
@@ -86,7 +86,7 @@ public class RoleService {
                 .map(this::buildHierarchy)
                 .collect(Collectors.toList());
 
-        dto.setChildren(children);
+        dto = dto.withChildren(children);
         return dto;
     }
 }

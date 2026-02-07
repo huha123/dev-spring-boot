@@ -23,12 +23,12 @@ public class BoardCommentService {
 
     @Transactional
     public BoardCommentDto createComment(BoardCommentDto commentDto) {
-        BoardEntity board = boardRepository.findById(commentDto.getBoardId())
+        BoardEntity board = boardRepository.findById(commentDto.boardId())
                 .orElseThrow(() -> new IllegalArgumentException("Board not found"));
 
         BoardCommentEntity comment = BoardCommentEntity.builder()
-                .content(commentDto.getContent())
-                .writer(commentDto.getWriter())
+                .content(commentDto.content())
+                .writer(commentDto.writer())
                 .board(board)
                 .build();
 
@@ -53,7 +53,7 @@ public class BoardCommentService {
                 .orElseThrow(() -> new IllegalArgumentException("Comment not found"));
 
         comment = comment.toBuilder()
-                .content(commentDto.getContent())
+                .content(commentDto.content())
                 .build();
 
         return BoardCommentDto.fromEntity(boardCommentRepository.save(comment));

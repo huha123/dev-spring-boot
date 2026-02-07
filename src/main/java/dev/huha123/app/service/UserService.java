@@ -32,16 +32,16 @@ public class UserService {
      */
     @Transactional
     public UserDto createUser(UserDto userDto) {
-        if (userRepository.findByUsername(userDto.getUsername()).isPresent()) {
+        if (userRepository.findByUsername(userDto.username()).isPresent()) {
             // 실무에서는 Custom Exception을 사용하는 것이 좋습니다.
             throw new RuntimeException("이미 존재하는 사용자 이름입니다.");
         }
 
         UserEntity userEntity = UserEntity.builder()
-                .username(userDto.getUsername())
-                .password(passwordEncoder.encode(userDto.getPassword()))
-                .email(userDto.getEmail())
-                .role(userDto.getRole())
+                .username(userDto.username())
+                .password(passwordEncoder.encode(userDto.password()))
+                .email(userDto.email())
+                .role(userDto.role())
                 .build();
 
         UserEntity savedUser = userRepository.save(userEntity);
@@ -93,8 +93,8 @@ public class UserService {
                 .id(existingUser.getId())
                 .username(existingUser.getUsername())
                 .password(existingUser.getPassword())
-                .email(userDto.getEmail()) // email 변경
-                .role(userDto.getRole())     // role 변경
+                .email(userDto.email()) // email 변경
+                .role(userDto.role())     // role 변경
                 .build();
 
         UserEntity savedUser = userRepository.save(updatedEntity);

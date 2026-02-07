@@ -2,31 +2,18 @@ package dev.huha123.app.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import dev.huha123.app.entity.UserEntity;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.With;
 
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
 @Builder
-public class UserDto {
-
-    private Long id;
-
-    private String username;
-
-    // JsonProperty.Access.WRITE_ONLY: 이 필드는 오직 쓰기(요청)시에만 사용됩니다.
-    // 즉, DTO를 JSON으로 변환하여 응답할 때는 이 필드가 제외됩니다.
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private String password;
-
-    private String email;
-
-    private String role;
+@With
+public record UserDto(
+        Long id,
+        String username,
+        @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+        String password,
+        String email,
+        String role) {
 
     /**
      * UserEntity를 UserDto로 변환하는 정적 팩토리 메서드
@@ -49,10 +36,10 @@ public class UserDto {
      */
     public UserEntity toEntity() {
         return UserEntity.builder()
-                .username(this.username)
-                .password(this.password) // 비밀번호 암호화는 서비스 계층에서 처리됩니다.
-                .email(this.email)
-                .role(this.role)
+                .username(username())
+                .password(password()) // 비밀번호 암호화는 서비스 계층에서 처리됩니다.
+                .email(email())
+                .role(role())
                 .build();
     }
 }

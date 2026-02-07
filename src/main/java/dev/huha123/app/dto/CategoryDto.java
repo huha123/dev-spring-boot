@@ -1,22 +1,15 @@
 package dev.huha123.app.dto;
 
 import dev.huha123.app.entity.CategoryEntity;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.With;
 
-@Getter
-@Setter
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class CategoryDto {
-
-    private String id;
-    private String name;
-    private boolean isUse;
+@With
+public record CategoryDto(
+        String id,
+        String name,
+        boolean isUse) {
 
     public static CategoryDto fromEntity(CategoryEntity entity) {
         return CategoryDto.builder()
@@ -28,9 +21,9 @@ public class CategoryDto {
 
     public CategoryEntity toEntity() {
         return CategoryEntity.builder()
-                .id(this.id)
-                .name(this.name)
-                .isUse(this.isUse)
+                .id(id())
+                .name(name())
+                .isUse(isUse())
                 .build();
     }
 }

@@ -1,33 +1,27 @@
 package dev.huha123.app.dto;
 
 import dev.huha123.app.entity.BoardEntity;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.With;
 
 import java.util.List;
 
-@Getter
-@Setter
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class BoardDto {
-
-    private Long id;
-    private String title;
-    private String content;
-    private String writer;
-    private String categoryId;
-    private Integer viewCount;
-    private boolean isVisible;
-    private boolean isNotice;
-    private boolean isSecret;
-    private long likeCount;
-    private boolean liked;
-    private List<BoardCommentDto> comments;
+@With
+public record BoardDto(
+    Long id,
+    String title,
+    String content,
+    String writer,
+    String categoryId,
+    Integer viewCount,
+    boolean isVisible,
+    boolean isNotice,
+    boolean isSecret,
+    long likeCount,
+    boolean liked,
+    List<BoardCommentDto> comments
+) {
 
     public static BoardDto fromEntity(BoardEntity entity) {
         return BoardDto.builder()
@@ -42,6 +36,19 @@ public class BoardDto {
                 .isSecret(entity.isSecret())
                 .likeCount(entity.getLikeCount())
                 .liked(entity.isLiked())
+                .build();
+    }
+
+    public BoardEntity toEntity() {
+        return BoardEntity.builder()
+                .id(id())
+                .title(title())
+                .content(content())
+                .writer(writer())
+                .viewCount(viewCount())
+                .isVisible(isVisible())
+                .isNotice(isNotice())
+                .isSecret(isSecret())
                 .build();
     }
 }

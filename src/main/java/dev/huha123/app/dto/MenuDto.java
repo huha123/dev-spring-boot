@@ -3,28 +3,21 @@ package dev.huha123.app.dto;
 import java.util.List;
 
 import dev.huha123.app.entity.MenuEntity;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.With;
 
-@Getter
-@Setter
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class MenuDto {
-
-    private Long id;
-    private String menuName;
-    private int sortOrder;
-    private Long parentId;
-    private String role;
-    private String pathUrl;
-    private boolean visible;
-    private String menuType;
-    private List<MenuDto> children;
+@With
+public record MenuDto(
+        Long id,
+        String menuName,
+        int sortOrder,
+        Long parentId,
+        String role,
+        String pathUrl,
+        boolean visible,
+        String menuType,
+        List<MenuDto> children) {
 
     public static MenuDto fromEntity(MenuEntity entity) {
         return MenuDto.builder()
@@ -41,13 +34,13 @@ public class MenuDto {
 
     public MenuEntity toEntity() {
         return MenuEntity.builder()
-                .id(this.id)
-                .menuName(this.menuName)
-                .sortOrder(this.sortOrder)
-                .role(this.role)
-                .pathUrl(this.pathUrl)
-                .visible(this.visible)
-                .menuType(this.menuType)
+                .id(id())
+                .menuName(menuName())
+                .sortOrder(sortOrder())
+                .role(role())
+                .pathUrl(pathUrl())
+                .visible(visible())
+                .menuType(menuType())
                 .build();
     }
 }
