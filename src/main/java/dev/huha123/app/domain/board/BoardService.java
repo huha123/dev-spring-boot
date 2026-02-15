@@ -3,10 +3,15 @@ package dev.huha123.app.domain.board;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import dev.huha123.app.common.JpaSpecificationUtil;
+import dev.huha123.app.common.SearchCondition;
 import dev.huha123.app.domain.category.CategoryEntity;
 import dev.huha123.app.domain.category.CategoryRepository;
 import dev.huha123.app.domain.file.FileDto;
@@ -36,8 +41,15 @@ public class BoardService {
         return BoardDto.fromEntity(boardRepository.save(board));
     }
 
-    public List<BoardDto> getAllBoards() {
-        return boardRepository.findAll().stream().map(boardEntity -> {
+    public Page<BoardDto> getAllBoards(SearchCondition searchCondition, Pageable pageable) {
+        Specification<BoardEntity> spec = JpaSpecificationUtil.emptySpec();
+        spec = spec.and(JpaSpecificationUtil.equal("writer", searchCondition.writer()));
+        spec = spec.and(JpaSpecificationUtil.likeIgnoreCase("title", searchCondition.title()));
+        spec = spec.and(JpaSpecificationUtil.likeIgnoreCase("content", searchCondition.content()));
+
+
+
+        return boardRepository.findAll(spec, pageable).map(boardEntity -> {
             boardEntity.setLikeCount(likeService.getLikeCount(LikeType.BOARD, boardEntity.getId()));
 
             // 댓글도 함께 매핑
@@ -49,7 +61,7 @@ public class BoardService {
                     .collect(Collectors.toList());
 
             return BoardDto.fromEntity(boardEntity).withComments(comments).withFiles(files);
-        }).collect(Collectors.toList());
+        });
     }
 
     public BoardDto getBoardById(Long id, java.security.Principal principal) {

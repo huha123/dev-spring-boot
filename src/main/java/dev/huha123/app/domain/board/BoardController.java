@@ -3,6 +3,10 @@ package dev.huha123.app.domain.board;
 import java.security.Principal;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import dev.huha123.app.common.SearchCondition;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -31,17 +36,21 @@ public class BoardController {
     }
 
     @GetMapping
-    public ResponseEntity<List<BoardDto>> getAllBoards() {
-        return ResponseEntity.ok(boardService.getAllBoards());
+    public ResponseEntity<?> getAllBoards(
+            SearchCondition searchCondition,
+            @PageableDefault(size = 20, page = 0, direction = Direction.DESC, sort = "id") Pageable pageable) {
+        return ResponseEntity.ok(boardService.getAllBoards(searchCondition, pageable));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<BoardDto> getBoardById(@PathVariable("id") Long id, java.security.Principal principal) {
+    public ResponseEntity<BoardDto> getBoardById(@PathVariable("id") Long id,
+            java.security.Principal principal) {
         return ResponseEntity.ok(boardService.getBoardById(id, principal));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<BoardDto> updateBoard(@PathVariable("id") Long id, @RequestBody BoardDto boardDto) {
+    public ResponseEntity<BoardDto> updateBoard(@PathVariable("id") Long id,
+            @RequestBody BoardDto boardDto) {
         return ResponseEntity.ok(boardService.updateBoard(id, boardDto));
     }
 
@@ -52,16 +61,14 @@ public class BoardController {
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> createBoardWithFiles(
-            @RequestPart("board") BoardDto boardDto,
+    public ResponseEntity<?> createBoardWithFiles(@RequestPart("board") BoardDto boardDto,
             @RequestPart(value = "files", required = false) List<MultipartFile> files,
             Principal principal) {
         return ResponseEntity.ok(boardService.createBoardWithFiles(boardDto, files));
     }
 
     @PutMapping(value = "/{id}", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
-    public ResponseEntity<BoardDto> updateBoardWithFiles(
-            @PathVariable("id") Long id,
+    public ResponseEntity<BoardDto> updateBoardWithFiles(@PathVariable("id") Long id,
             @RequestPart("board") BoardDto boardDto,
             @RequestPart(value = "files", required = false) List<MultipartFile> files) {
         return ResponseEntity.ok(boardService.updateBoardWithFiles(id, boardDto, files));

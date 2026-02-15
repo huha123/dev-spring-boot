@@ -6,6 +6,10 @@ spring:
     active:
       - local
   output.ansi.enabled: always
+  data:
+    web:
+      pageable:
+        one-indexed-parameters: true
 
 logging:
   level:

@@ -12,6 +12,8 @@ Content-Type: application/json
 
 ### Get all boards
 GET http://localhost:8080/api/boards
+?writer=admin
+# ?title=board&content=please
 Authorization: Bearer {{auth_token}}
 
 ### Get board by id
